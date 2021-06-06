@@ -8,6 +8,7 @@ import logging
 import time
 
 from requests.models import HTTPError
+from random_system import get_system_kills, get_system_name
 
 
 # Final deployment destination is intended to be in a docker container running on a RaspberryPi. Intitally set the logging level to info
@@ -29,13 +30,13 @@ def get_current_population():
         print(f'Population endpoint response: {response.status_code}')
 
     except HTTPError as http_error:
-        print(f'HTTP error has occurred with get_curren_population: {http_error}')
+        print(f'HTTP error occurred with get_curren_population: {http_error}')
 
     except Exception as err:
-        print(f'An error has occurred with get_current_population: {err}')
+        print(f'An error occurred with get_current_population: {err}')
     
     else:
-        print('get_current_population request was successful')
+        print('get_current_population request successful')
     
     # this assigns the API response text to the data variable so that you can access the player numbers
     data = json.loads(response.text)
@@ -49,7 +50,7 @@ def get_current_population():
 
 def main():
     get_current_population()
-
+    
 
 if __name__ == '__main__':
     main()
