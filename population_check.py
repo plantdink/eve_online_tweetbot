@@ -2,6 +2,7 @@
 This is the main module and contains the function that fetches the main population data from the ESI API status endpoint
 '''
 
+from tweet_stats import compose_tweet
 import requests
 import json
 import logging
@@ -9,6 +10,7 @@ import time
 
 from requests.models import HTTPError
 from random_system import get_system_kills, get_system_name
+from tweet_stats import compose_tweet, send_tweet
 
 
 # Final deployment destination is intended to be in a docker container running on a RaspberryPi. Intitally set the logging level to info
@@ -49,7 +51,21 @@ def get_current_population():
 
 
 def main():
-    get_current_population()
+    while True:
+
+        # this assigns the get_current_population to ciurrent population so that it can be passed to compose_tweet
+        current_population = get_current_population()
+
+        system_kills_num, random_system, system_spotlight_stats = get_system_kills()
+
+        system_name, sec_status = get_system_name(random_system)
+
+        tweet = compose_tweet(current_population, system_kills_num, system_name, sec_status, system_spotlight_stats)
+
+        send_tweet(tweet)
+
+        logger.info('Waiting...')
+        time.sleep(120)
     
 
 if __name__ == '__main__':
